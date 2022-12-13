@@ -1,28 +1,30 @@
 #%% import libs and get data
 
-import keras.layers as Layers
-import keras.models as Models
-import keras.utils as Utils
-from keras.utils.vis_utils import model_to_dot
 import os
-import matplotlib.pyplot as plot
 import cv2
 import numpy as np
-from sklearn.utils import shuffle
 from random import randint
-from IPython.display import SVG
+from sklearn.utils import shuffle
 import matplotlib.gridspec as gridspec
-import tensorflow as tf
-import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.pyplot as plot
+import pandas as pd
+import tensorflow as tf
+import keras.models as Models
+import keras.layers as Layers
+import keras.utils as Utils
+from keras.utils.vis_utils import model_to_dot
+from IPython.display import SVG
+from sklearn.metrics import confusion_matrix
+import seaborn as sn
 
 class_names = ['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street']
 
 
 def get_images(directory):
     label = 0
-    Labels = []
-    Images = []
+    labels_arr = []
+    images_arr = []
 
     for labels in os.listdir(directory):
         if labels == 'buildings':
@@ -44,10 +46,10 @@ def get_images(directory):
                 image = cv2.imread(directory + labels + r'/' + str(image_file))
                 image = cv2.resize(image, (
                     150, 150))
-                Labels.append(label)
-                Images.append(image)
+                labels_arr.append(label)
+                images_arr.append(image)
 
-    return shuffle(Images, Labels, random_state=864925937)
+    return shuffle(images_arr, labels_arr, random_state=864925937)
 
 
 def get_class_label(class_code):
@@ -203,9 +205,6 @@ def print_mislabeled_images(test_images, test_labels, pred_labels):
 
 print_mislabeled_images(test_images, test_labels, pred_labels)
 # %% error analysis with confusion matrix
-
-from sklearn.metrics import confusion_matrix
-import seaborn as sn
 
 class_names_string = []
 
